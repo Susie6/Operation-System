@@ -1,11 +1,17 @@
-# Operation-System
-模拟Linux文件管理系统
+# Operation-System 模拟Linux文件管理系统
+项目名称：模拟Linux文件管理系统
 本程序使用c++实现
 
-设计原理：本程序首先开辟一个100M的空白文件用来模拟磁盘空间，每个盘块的大小为1k，通过计算可知，改100M空间可以容纳100*1024个盘块，将盘块按顺序编号，0号盘块作为超级块，1号到4号盘块作为i节点位图，5到404号盘块作为逻辑磁盘块位图，405到532号盘块作为i节点区，剩余盘块则作为数据块，用于存储信息。
-实现的功能：可使用init,info,cd,dir,md,rd,newfile,copy,del,check,exit命令行进行操作
+##### 设计原理：
 
-全局变量：
+本程序首先开辟一个100M的空白文件用来模拟磁盘空间，每个盘块的大小为1k，通过计算可知，改100M空间可以容纳100*1024个盘块，将盘块按顺序编号，0号盘块作为超级块，1号到4号盘块作为i节点位图，5到404号盘块作为逻辑磁盘块位图，405到532号盘块作为i节点区，剩余盘块则作为数据块，用于存储信息。
+
+##### 实现的功能：
+
+可使用init,info,cd,dir,md,rd,newfile,copy,del,check,exit命令行进行操作
+
+##### 全局变量：
+
 1.定义命令数组
 static const char *cmdCommands[COMMAND_COUNTS] =
 {
@@ -28,8 +34,11 @@ extern blockGroup dataBlockGroups[BLOCK_GROUPS_NUM];//数据块组
 extern i_node inodeTable[INODES_NUM];//i-结点表
 extern bitmapStatus bsBlockBmp[BLOCKS_NUM];	//数据块位图数组
 extern bitmapStatus bsInodeBmp[INODES_NUM];	//i-结点位图数组
-定义的函数及算法分析：
-cmd命令：
+
+##### 定义的函数及算法分析：
+
+###### cmd命令：
+
 1.void cmd_init();init命令，初始化命令函数
 开辟数据盘块，将数据块位图数组以及i节点位图数组设置为未使用状态，设置默认路径为根目录root，设置数据盘块基本信息并保存，写入虚拟磁盘，开辟100M的空间，初始化完成后清空屏幕。
 2.void cmd_info();info命令，信息显示函数，用于显示系统信息。
@@ -43,7 +52,9 @@ cmd命令：
 10.void cmd_del(const char *strPath);del命令，删除文件函数，创建dir类的实例对象dirTemp，再调用analyse_path函数，拆分路径，分析路径是否有效，有效则提取出要删除的文件名，调用dirTemp的成员函数delete_file删除文件，无效则提示错误信息。
 11.void cmd_check();check命令，检测并恢复文件系统函数，对文件系统中的数据一致性进行检测，并自动根据文件系统的结构和信息进行数据再整理，计算空闲块和i结点总和，若计算结果和虚拟磁盘中的记录不同，则说明发生了异常，发生异常之后重新将数据块组中的内容重新写入虚拟磁盘，完成修复。
 12.void cmd_exit();exit命令，退出程序函数
-其他函数：
+
+###### 其他函数：
+
 1.void load();加载函数，先判断虚拟磁盘是否已开启，若为开启则提示用户先进行磁盘初始化。
 2.void execute(const char *comm, const char *p1, const char *p2);执行命令函数，将命令在命令行数组cmdCommands中编号，根据输入的命令与命令行数组cmdCommands中的命令进行对比，得出命令编号，利用switch函数根据命令编号分别调用cmd命令函数。
 3.分配以及释放内存的函数
